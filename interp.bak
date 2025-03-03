@@ -54,57 +54,27 @@
 
 ;; Applies a binary argument to two arguments
 (define (eval-binop op e1 e2 env)
-  (let* ([op-symbol (cond
-                      [(eq? op +) '+]
-                      [(eq? op -) '-]
-                      [(eq? op *) '*]
-                      [(eq? op >) '>]
-                      [(eq? op >=) '>=]
-                      [(eq? op <) '<]
-                      [(eq? op <=) '<=]
-                      [else op])]  ;; If it's already a symbol, leave it unchanged
-         [res1 (evaluate e1 env)]        
-         [res2 (evaluate e2 (cdr res1))]
-         [v1 (car res1)]
-         [v2 (car res2)]
-         [op-func (match op-symbol
-                    ['+ +]
-                    ['- -]
-                    ['* *]
-                    ['> >]
-                    ['>= >=]
-                    ['< <]
-                    ['<= <=]
-                    [_ (error "Unknown operator" op-symbol)])])
-    (cons (op-func v1 v2) (cdr res2))))
+  (let* ([r1 (evaluate e1 env)]        ;; Evaluate the lhs expression first
+         [v1 (car r1)] [env1 (cdr r1)]
+         [r2 (evaluate e2 env1)]       ;; Evaluate the rhs expression second
+         [v2 (car r2)] [env2 (cdr r2)])
+    (cons (apply op (list v1 v2))      ;; Apply the binary operator to its arguments
+          env2)))
 
-
-
-    
 ;; Evaluates a conditional expression
 (define (eval-if c thn els env)
-  (let* ([res (evaluate c env)])
-    (if (car res)
-        (evaluate thn (cdr res))
-        (evaluate els (cdr res)))))
+  (error "Your code here"))
 
 ;; Evaluates a loop.
 ;; When the condition is false, return 0.
 ;; There is nothing special about zero -- we just need to return something.
 (define (eval-while c body env)
-  (let loop ([env env])
-    (let* ([res (evaluate c env)])
-      (if (car res)
-          (loop (cdr (evaluate body (cdr res))))
-          (cons 0 (cdr res))))))
+  (error "Your code here"))
 
 ;; Handles imperative updates.
 (define (eval-assign var exp env)
-  (let* ([res (evaluate exp env)])
-    (cons (car res) (hash-set (cdr res) var (car res)))))
+  (error "Your code here"))
 
 ;; Handles sequences of statements
 (define (eval-seq e1 e2 env)
-  (let* ([res1 (evaluate e1 env)]
-         [res2 (evaluate e2 (cdr res1))])
-   res2))
+  (error "Your code here"))
